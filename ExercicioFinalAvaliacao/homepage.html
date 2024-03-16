@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"0>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DotGothic16&family=Inter:wght@400;700&family=Poppins:wght@100;200;300;400;600;700;800;900&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+    }
+
+    .main-section {
+      width: 900px;
+      max-width: 90vw;
+      margin: auto;
+      text-align: center;
+      padding-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .product-container {
+      background-color: #eeeee6;
+      padding: 20px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .product-image {
+      width: 100px;
+    }
+
+    .add-to-cart-button {
+      background-color: black;
+      color: #eee;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+  <script>
+    class ECommerce {
+        constructor() {
+            this.cart = {};
+            this.date = new Date().toISOString().split('T')[0];
+        }
+
+        async addToCart(product) {
+            if(this.cart[product.id]) {
+                this.cart[product.id].quantity++;
+            } else {
+                this.cart[product.id] = {quantity: 1};
+            }
+
+            await fetch('https://fakestoreapi.com/carts/7', {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    id: '12345',
+                    date: this.date,
+                    products: Object.keys(this.cart).map(id => ({
+                        id,
+                        quantity: this.cart[id].quantity
+                    }))
+                })
+            });
+        }
+    }
+
+    const store = new ECommerce();
+
+    fetch('https://fakestoreapi.com/products')
+      .then((response) => response.json())
+      .then((requestProducts) => {
+        console.log(requestProducts);
+
+        const mainSection = document.createElement('div');
+        mainSection.classList.add('main-section');
+        document.body.prepend(mainSection);
+
+        requestProducts.forEach((product) => {
+          const productContainer = document.createElement('div');
+          productContainer.classList.add('product-container');
+          mainSection.appendChild(productContainer);
+
+          const productImage = document.createElement('img');
+          productImage.setAttribute('src', product.image);
+          productImage.classList.add('product-image');
+          productContainer.appendChild(productImage);
+
+          const productTitle = document.createElement('h6');
+          productTitle.innerHTML= `${product.title}`;
+          productContainer.appendChild(productTitle);
+
+          const addToCartButton = document.createElement('button');
+
+          addToCartButton.onclick = () => {store.addToCart(product)};
+
+          addToCartButton.innerHTML = 'ADD TO CART';
+          addToCartButton.classList.add('add-to-cart-button');
+          productContainer.appendChild(addToCartButton);
+        })
+      });
+  </script>
+</body>
+</html>

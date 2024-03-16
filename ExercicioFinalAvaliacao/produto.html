@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    fetch('https://fakestoreapi.com/products')
+      .then((response) => response.json())
+      .then((requestProduct) => {
+
+        const productOne = requestProduct.find((product) => product.id === 1);
+
+        console.log(productOne);
+
+        const mainSection = document.createElement('div');
+        mainSection.classList.add('main-section');
+        document.body.prepend(mainSection);
+
+
+        const productImage = document.createElement('img');
+        productImage.setAttribute('src', productOne.image);
+        productImage.classList.add('product-image');
+        mainSection.appendChild(productImage);
+
+        const productTitle = document.createElement('h6');
+        productTitle.innerHTML= `Title: ${productOne.title}`;
+        mainSection.appendChild(productTitle);
+
+        const productCategory = document.createElement('h6');
+        productCategory.innerHTML= `Category: ${productOne.category}`;
+        mainSection.appendChild(productCategory);
+
+        const productDescription = document.createElement('h6');
+        productDescription.innerHTML= `Description: ${productOne.description}`;
+        mainSection.appendChild(productDescription);
+
+        const productPrice = document.createElement('h6');
+        productPrice.innerHTML= `Price: ${productOne.price}`;
+        mainSection.appendChild(productPrice);
+
+        const productRating = document.createElement('h6');
+        productRating.innerHTML= `Rating: ${productOne.rating.rate} in ${productOne.rating.count} opinions.`;
+        mainSection.appendChild(productRating);
+
+        const productsSameCategory = requestProduct.filter((product) => product.category === productOne.category);
+
+        const productsSameCategoryToDisplay = productsSameCategory.slice(0, 3);
+
+        productsSameCategoryToDisplay.forEach((product) => {
+          const productContainer = document.createElement('div');
+          productContainer.classList.add('product-container');
+          mainSection.appendChild(productContainer);
+
+          const productImage = document.createElement('img');
+          productImage.setAttribute('src', product.image);
+          productImage.classList.add('product-image');
+          productContainer.appendChild(productImage);
+
+          const productTitle = document.createElement('h6');
+          productTitle.innerHTML= `${product.title}`;
+          productContainer.appendChild(productTitle);
+        })
+
+        const footer = document.createElement('div');
+        footer.classList.add('footer');
+        document.body.append(footer);
+
+        const dateYear = new Date().getFullYear();
+
+        const copyright = document.createElement('p');
+        copyright.innerHTML= `Copyright${dateYear}`;
+        footer.appendChild(copyright);
+      })
+  </script>
+</body>
+</html>

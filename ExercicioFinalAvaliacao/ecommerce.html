@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class Ecommerce {
+        // Criação de uma classe Ecommerce sem parâmetros pré-definidos, para que seja mais adaptável e funcional.
+        // No seu contructor recebe apenas as variáveis onde irão ser guardados os dados gerados através dos métodos.
+        // A variável products recebe um objeto em que o id do produto criado aloja um objeto que contém todas as informações relativas a cada produto criado.
+
+        constructor() {
+          this.cart = [];
+          this.products = {};
+        }
+
+        // função addProduct que recebe os campos que compõem cada produto (id, name, price).
+        // Neste caso, esta função cria por produto, conforme explicado acima, um objeto com chave = id, cujo valor é um novo objeto que contém as chaves id, name e price com os valores designados a cada um.
+        // A criação de um objeto com chave = id, que recebe como valor outro objeto, deve-se a uma otimização de pesquisa/filtragem. O id é um valor único que distingue cada produto, independentemente de apresentar o mesmo nome ou preço.
+        addProduct({ id, name, price }) {
+          this.products[id] = { id, name, price };
+        }
+
+        // função setProductPrice recebe o valor relativo à chave id e um valor relativo à chave price.
+        // Nesta função, o valor de id é utilizado como pesquisa dentro da variável products.
+        // Procura o valor do id passado como parâmetro e atribui à chave price associada a esse id, o novo valor passado como parâmetro, atualizando o valor da chave price.
+        setProductPrice(id, price) {
+          this.products[id].price = price;
+        }
+
+        getAllProducts() {
+          return this.products;
+        }
+
+        getAllProductsNames() {
+          return Object.values(this.products)
+            .map((product) => product.name)
+            .join("; ");
+        }
+
+        getProductById(id) {
+          return this.products[id];
+        }
+
+        getProductByName(name) {
+          return Object.values(this.products).find(
+            (product) => product.name === name
+          );
+        }
+
+        getProductsByPrice(initialPrice, finalPrice) {
+          return Object.values(this.products).filter(
+            (product) =>
+              initialPrice <= product.price && product.price <= finalPrice
+          );
+        }
+
+        addProductToCart(product) {
+          this.cart.push(product);
+        }
+
+        getCart() {
+          return this.cart;
+        }
+
+        getCartTotalPrice() {
+          return Object.values(this.cart).reduce(
+            (acc, product) => product.price + acc,
+            0
+          );
+        }
+      }
+
+      // const ecommerce = new Ecommerce();
+      // ecommerce.addProduct({id: 1, name: 'saia', price: 20});
+      // ecommerce.addProduct({id: 2, name: 'calças', price: 10});
+      // ecommerce.addProduct({id: 3, name: 'calças', price: 5});
+
+      // const objByName = ecommerce.getCartTotalPrice();
+      // console.log(objByName);
+      // console.log(ecommerce.products);
+    </script>
+  </body>
+</html>
